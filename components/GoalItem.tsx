@@ -2,13 +2,14 @@ import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 interface GoalItemProps {
+  id: string;
   text: string;
-  onDeleteItem: () => void;
+  onDeleteItem: (id: string) => void;
 }
 
-export default function GoalItem({ text, onDeleteItem }: GoalItemProps) {
+export default function GoalItem({ id, text, onDeleteItem }: GoalItemProps) {
   return (
-    <Pressable onPress={onDeleteItem}>
+    <Pressable onPress={() => onDeleteItem(id)}>
       <View style={styles.goalItem}>
         <Text style={styles.goalText}>{text}</Text>
       </View>
