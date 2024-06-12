@@ -1,21 +1,12 @@
 import { useState } from "react";
-import {
-  Button,
-  CellRendererProps,
-  FlatList,
-  FlatListProps,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Button, FlatList, StyleSheet, TextInput, View } from "react-native";
+import GoalItem from "./components/GoalItem";
 
 export default function App() {
   const [enteredGoalText, setEnteredGoalText] = useState("");
   const [courseGoals, setCourseGoals] = useState<
     {
-      key: string;
+      id: string;
       text: string;
     }[]
   >([]);
@@ -28,9 +19,8 @@ export default function App() {
     setCourseGoals((currentCourseGoals) => [
       ...currentCourseGoals,
       {
+        id: Math.random().toString(),
         text: enteredGoalText,
-        // FlatList에 데이터를 사용하는 경우 key 프로퍼티를 자동으로 참조한다.
-        key: Math.random().toString(),
       },
     ]);
   }
@@ -52,16 +42,12 @@ export default function App() {
         ScrollView의 alwaysBounceVertical가 false면 스크롤 가능한 공간만큼 채워지지 않는 경우는 튀어오르는 효과가 없어진다. 기술문서를 보고 상황에 따라 사용하자 */}
         <FlatList
           data={courseGoals}
-          renderItem={({ item, index }) => {
-            return (
-              <View style={styles.goalItem}>
-                <Text style={styles.goalText}>{item.text}</Text>
-              </View>
-            );
+          renderItem={({ item }) => {
+            return <GoalItem text={item.text} />;
           }}
-          // keyExtractor={(item, index) => {
-          //   return item.id;
-          // }} key 프로퍼티를 자동으로 참조하게 하는 게 내키지 않으면 이런 방식도 있다.
+          keyExtractor={(item) => {
+            return item.id;
+          }}
         />
       </View>
     </View>
@@ -92,16 +78,5 @@ const styles = StyleSheet.create({
   },
   goalsContainer: {
     flex: 5,
-  },
-  goalItem: {
-    // color: "white",를 컨테이너 요소에 적용한다고 해도 내부의 TEXT 요소에 상속되지 않는다는 점에서 웹 CSS와 다르다.
-    margin: 8,
-    padding: 8,
-    // iOS는 누락된다. iOS에서는 기본 네이티브 TEXT 요소가 지원하지 않는다. 컨테이너 요소에 적용하면 된다.
-    borderRadius: 6,
-    backgroundColor: "#5e0acc",
-  },
-  goalText: {
-    color: "white",
   },
 });
